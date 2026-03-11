@@ -85,6 +85,13 @@
             width: min(90vw, 1100px);
             height: auto;
             overflow: visible;
+            cursor: pointer;
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Tactile press effect for the title */
+        #mainTitle:active {
+            transform: scale(0.95);
         }
 
         #mainTitle text {
@@ -569,7 +576,6 @@
    ═══════════════════════════════════════════════════ */
         @media (hover: hover) and (pointer: fine) {
 
-            /* 1. About */
             .nav-obj-1:hover .rgb-glasses,
             .nav-obj-1:focus-visible .rgb-glasses {
                 stroke-dasharray: none;
@@ -581,13 +587,11 @@
                 animation: hairWave 0.4s ease-in-out infinite alternate;
             }
 
-            /* 2. Projects */
             .nav-obj-2:hover .wheel,
             .nav-obj-2:focus-visible .wheel {
                 animation: wheelSpin 0.3s linear infinite;
             }
 
-            /* 3. Links */
             .nav-obj-3:hover .play-triangle,
             .nav-obj-3:focus-visible .play-triangle {
                 opacity: 0;
@@ -604,7 +608,6 @@
                 animation: broadcastEmit 1s infinite ease-out;
             }
 
-            /* 4. Contact */
             .nav-obj-4:hover .default-n1,
             .nav-obj-4:focus-visible .default-n1,
             .nav-obj-4:hover .default-n2,
@@ -1277,7 +1280,7 @@
         });
 
         /* ═══════════════════════════════════════════════════
-           SECTION DATA
+           SECTION DATA (MAPPED TO NEW POSITIONS)
            ═══════════════════════════════════════════════════ */
         const SECTIONS = {
             about: {
@@ -1311,7 +1314,7 @@
                 title: 'Get in Touch',
                 body: 'Always open to collaborations, freelance projects, and conversations about AI. Drop a message and let\'s build something remarkable together.',
                 linksList: [
-                    { text: 'Send an Email →', url: 'mailto:agirishgirish9@gmail.com' }
+                    { text: 'Send an Email →', url: 'mailto:agirishgirish9@gmail.com' } // Updated Email
                 ],
                 accent: '#00F0FF'
             }
@@ -1474,8 +1477,8 @@
            FUN FACT GENERATOR LOGIC
            ═══════════════════════════════════════════════════ */
         const funFacts = [
-            "The first computer bug was an actual moth found in 1947.",
-            "Python was named after the British comedy troupe Monty Python.",
+            "The first computer bug was an actual moth found in a Harvard Mark II computer in 1947.",
+            "Python was named after the British comedy troupe Monty Python, not the snake.",
             "A single quantum computer could theoretically solve problems taking classical computers billions of years.",
             "The Apollo 11 guidance computer had less processing power than a modern USB-C charger.",
             "n8n was founded in 2019 and is a fair-code licensed tool, perfect for self-hosting.",
@@ -1487,10 +1490,13 @@
             "There is a programming language called 'Brainfuck' designed specifically to be as difficult as possible to use.",
             "The QWERTY keyboard layout was originally designed to slow typists down to prevent mechanical typewriters from jamming.",
             "CAPTCHA stands for 'Completely Automated Public Turing test to tell Computers and Humans Apart'.",
-            "The world's first webcam was created at Cambridge University to monitor a coffee pot.",
+            "The world's first webcam was created at Cambridge University just to monitor a coffee pot.",
             "C++ was originally called 'C with Classes'.",
             "Ada Lovelace is widely recognized as the world's first computer programmer, writing an algorithm for a computing machine in the mid-1800s.",
-            "Domain name registration used to be completely free until 1995."
+            "Domain name registration used to be completely free until 1995.",
+            "JavaScript was created in just 10 days in May 1995 by Brendan Eich.",
+            "The term 'Robot' comes from the Czech word 'robota', meaning forced labor.",
+            "The average typist's left hand does about 56% of the typing."
         ];
 
         const funFactBtn = document.getElementById('funFactBtn');
@@ -1519,10 +1525,12 @@
         });
 
         /* ═══════════════════════════════════════════════════
-           MOUSE-REACTIVE SVG TITLE
+           MOUSE-REACTIVE SVG TITLE (WITH SHOCKWAVE EFFECT)
            ═══════════════════════════════════════════════════ */
+        const mainTitleSvg = document.getElementById('mainTitle');
         const titleWrap = document.getElementById('titleWrap');
         const strokeTexts = document.querySelectorAll('.title-stroke');
+
         function animateTitle() {
             if (!isTabActive) {
                 requestAnimationFrame(animateTitle);
@@ -1538,6 +1546,27 @@
             requestAnimationFrame(animateTitle);
         }
         animateTitle();
+
+        // Trigger Canvas Shockwave on Title Click
+        mainTitleSvg.addEventListener('click', () => {
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+
+            particles.forEach(p => {
+                const dx = p.x - cx;
+                const dy = p.y - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+                // Massive velocity boost
+                const force = Math.random() * 25 + 15;
+
+                p.vx = (dx / dist) * force;
+                p.vy = (dy / dist) * force;
+
+                // Rapid kinetic spin
+                p.rotSpeed = (Math.random() - 0.5) * 0.8;
+            });
+        });
 
         /* ═══════════════════════════════════════════════════
            FLOATING NAV — MOUSE PARALLAX
@@ -1655,23 +1684,54 @@
             reset() {
                 this.x = Math.random() * W;
                 this.y = Math.random() * H;
+
+                // Base normal speeds
                 this.vx = (Math.random() - 0.5) * 0.4;
                 this.vy = (Math.random() - 0.5) * 0.4;
+                this.baseVx = this.vx;
+                this.baseVy = this.vy;
 
                 this.type = Math.floor(Math.random() * 6);
                 this.size = 6 + Math.random() * 8;
 
                 this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
                 this.alpha = 0.1 + Math.random() * 0.2;
+
                 this.rot = Math.random() * Math.PI * 2;
                 this.rotSpeed = (Math.random() - 0.5) * 0.015;
+                this.baseRotSpeed = this.rotSpeed;
+
                 this.parallaxDepth = 0.3 + Math.random() * 0.7;
             }
+
             update() {
-                this.x += this.vx; this.y += this.vy; this.rot += this.rotSpeed;
-                if (this.x < -40) this.x = W + 40; if (this.x > W + 40) this.x = -40;
-                if (this.y < -40) this.y = H + 40; if (this.y > H + 40) this.y = -40;
+                // Friction: Smoothly decelerate back to normal speed (post-shockwave)
+                this.vx += (this.baseVx - this.vx) * 0.03;
+                this.vy += (this.baseVy - this.vy) * 0.03;
+                this.rotSpeed += (this.baseRotSpeed - this.rotSpeed) * 0.03;
+
+                this.x += this.vx;
+                this.y += this.vy;
+                this.rot += this.rotSpeed;
+
+                // Determine if particle is in high-speed Shockwave mode
+                const isShockwave = Math.abs(this.vx) > 1.5 || Math.abs(this.vy) > 1.5;
+
+                if (isShockwave) {
+                    // Bounce off screen edges dynamically
+                    if (this.x < 0) { this.x = 0; this.vx *= -1; this.baseVx *= -1; }
+                    if (this.x > W) { this.x = W; this.vx *= -1; this.baseVx *= -1; }
+                    if (this.y < 0) { this.y = 0; this.vy *= -1; this.baseVy *= -1; }
+                    if (this.y > H) { this.y = H; this.vy *= -1; this.baseVy *= -1; }
+                } else {
+                    // Normal lazy wrap-around behavior
+                    if (this.x < -40) this.x = W + 40;
+                    if (this.x > W + 40) this.x = -40;
+                    if (this.y < -40) this.y = H + 40;
+                    if (this.y > H + 40) this.y = -40;
+                }
             }
+
             draw(ctx, mx, my) {
                 const cx = W / 2, cy = H / 2;
                 const dx = (mx - cx) / cx * 20 * this.parallaxDepth;
