@@ -875,6 +875,11 @@
             transform: scale(0.3);
             opacity: 0;
             transition: transform 0.55s cubic-bezier(.22, 1, .36, 1), opacity 0.45s ease, border-color 0.4s ease;
+            max-height: 85vh; /* ADDED */
+            overflow-y: auto; /* ADDED */
+            overflow-x: hidden; /* ADDED */
+            scrollbar-width: thin; /* ADDED */
+            scrollbar-color: #333 #141414; /* ADDED */
         }
 
         #modalOverlay.active #modalCard {
@@ -889,7 +894,7 @@
             letter-spacing: 0.04em;
         }
 
-        #modalCard p {
+        #modalCard p, #modalCard div {
             font-size: 0.92rem;
             line-height: 1.65;
             color: #aaa;
@@ -1264,7 +1269,7 @@
                 </svg>
             </button>
             <h2 id="modalTitle"></h2>
-            <p id="modalBody"></p>
+            <div id="modalBody"></div>
 
             <div id="modalLinksContainer"></div>
         </div>
@@ -1280,20 +1285,39 @@
         });
 
         /* ═══════════════════════════════════════════════════
-           SECTION DATA (MAPPED TO NEW POSITIONS)
+           SECTION DATA (MAPPED TO NEW POSITIONS & RESUME)
            ═══════════════════════════════════════════════════ */
         const SECTIONS = {
             about: {
                 title: 'About',
-                body: "Hey, I'm Avugaddi Girish—an AI Automation Engineer. I build intelligent workflows that replace manual tasks with scalable solutions, leveraging the power of Python, TensorFlow, and Generative AI.",
+                body: `Hey, I'm Avugaddi Girish—an AI Automation Engineer and UI/UX Designer.<br><br>
+                <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 8px; border-left: 2px solid #FF2D6B; margin-top: 10px;">
+                    <strong style="color: #FF2D6B; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Experience</strong><br>
+                    <span style="color: #E0E0E0;">UI/UX Designer @ VNC Farms Pvt Ltd</span> <span style="font-size: 0.75rem; color: #888;">(Jun 2025 - Jul 2025)</span><br>
+                    <span style="font-size: 0.8rem; color: #aaa;">Designed responsive landing pages, managed multiple design projects, and optimized workflows to reduce completion time.</span>
+                    <br><br>
+                    <strong style="color: #FF2D6B; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Education</strong><br>
+                    <span style="color: #E0E0E0;">B.Sc. Computer Science (CGPA: 8.00)</span><br>
+                    <span style="font-size: 0.8rem; color: #aaa;">Amity University, Raipur (Sept 2023 - Nov 2027)</span><br><br>
+                    <span style="color: #E0E0E0;">Intermediate MPC (GPA: 9.21)</span><br>
+                    <span style="font-size: 0.8rem; color: #aaa;">Narayana Jr. College, Visakhapatnam (2019 - 2021)</span>
+                </div>`,
                 linksList: [
-                    { text: 'Download Résumé →', url: '#' }
+                    { text: 'Download Résumé (PDF) →', url: 'Girish_Resume_FD.pdf' }
                 ],
                 accent: '#FF2D6B'
             },
             projects: {
-                title: 'Projects',
-                body: 'AI-powered automation pipelines, generative design tools, and intelligent agents. Each project pushes the boundary between machine intelligence and creative engineering.',
+                title: 'Projects & Skills',
+                body: `I build AI-powered automation pipelines and interactive tools. Here are some of my recent works:<br><br>
+                <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 8px; border-left: 2px solid #FFE500; margin-top: 10px;">
+                    <strong style="color: #FFE500;">Syllabus Tracker:</strong> <span style="font-size: 0.85rem; color: #aaa;">Web-based system (HTML/CSS/JS) for monitoring syllabus progress with task scheduling.</span><br><br>
+                    <strong style="color: #FFE500;">AskBase-FAQ:</strong> <span style="font-size: 0.85rem; color: #aaa;">Interactive FAQ platform with optimized search and accessibility.</span><br><br>
+                    <strong style="color: #FFE500;">AI Recommendation System:</strong> <span style="font-size: 0.85rem; color: #aaa;">Personalized content delivery using cosine similarity algorithms.</span><br><br>
+                    <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 12px 0;">
+                    <strong style="color: #FFE500; font-size: 0.85rem;">Skills:</strong> <span style="font-size: 0.8rem; color: #aaa;">Python, C/C++, Web Dev, Machine Learning, n8n, OpenAI API, Figma.</span><br>
+                    <strong style="color: #FFE500; font-size: 0.85rem;">Certifications:</strong> <span style="font-size: 0.8rem; color: #aaa;">IBM Intro to AI, n8n Automation, AI Agents Dev.</span>
+                </div>`,
                 linksList: [
                     { text: 'Browse on Github →', url: 'https://github.com/AvugaddiGirish' }
                 ],
@@ -1312,9 +1336,14 @@
             },
             contact: {
                 title: 'Get in Touch',
-                body: 'Always open to collaborations, freelance projects, and conversations about AI. Drop a message and let\'s build something remarkable together.',
+                body: `Always open to collaborations, freelance projects, and conversations about AI.<br><br>
+                <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 8px; border-left: 2px solid #00F0FF; margin-top: 10px;">
+                    <strong style="color: #E0E0E0;">Email:</strong> <a href="mailto:agirishgirish9@gmail.com" style="color: #00F0FF; text-decoration: none;">agirishgirish9@gmail.com</a><br>
+                    <strong style="color: #E0E0E0;">Mobile:</strong> <span style="color: #aaa;">+91 6302115150</span><br>
+                    <strong style="color: #E0E0E0;">Location:</strong> <span style="color: #aaa;">India</span>
+                </div>`,
                 linksList: [
-                    { text: 'Send an Email →', url: 'mailto:agirishgirish9@gmail.com' } // Updated Email
+                    { text: 'Send an Email →', url: 'mailto:agirishgirish9@gmail.com' }
                 ],
                 accent: '#00F0FF'
             }
@@ -1609,7 +1638,7 @@
 
             const data = SECTIONS[section]; if (!data) return;
             mTitle.textContent = data.title;
-            mBody.textContent = data.body;
+            mBody.innerHTML = data.body;
 
             const linksContainer = document.getElementById('modalLinksContainer');
             linksContainer.innerHTML = '';
